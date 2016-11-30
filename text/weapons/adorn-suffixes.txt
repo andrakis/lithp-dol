@@ -1,0 +1,6 @@
+glass:2
+obsidian:5
+ironglass:4
+rock:1
+flame:6
+ice:5

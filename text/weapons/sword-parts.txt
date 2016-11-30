@@ -1,0 +1,7 @@
+scabbard
+hilt
+pommel
+handwrap
+handguard
+blade
+inscription

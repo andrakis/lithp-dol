@@ -1,0 +1,5 @@
+simple engraved:1
+ruby:2
+sapphire:3
+diamond:4
+engraved ruby:5

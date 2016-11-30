@@ -1,0 +1,6 @@
+wood:1
+iron:2
+steel:3
+obsidian:4
+ironglass:5
+

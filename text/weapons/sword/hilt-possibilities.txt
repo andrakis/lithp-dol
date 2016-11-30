@@ -1,0 +1,4 @@
+wooden:0
+iron:1
+steel:1
+

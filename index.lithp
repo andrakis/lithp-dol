@@ -1,0 +1,6 @@
+#!./run
+(
+	(import "src/weapons")
+	(var Weapon (random-weapon 10))
+	(print (describe-weapon Weapon) "\n")
+)

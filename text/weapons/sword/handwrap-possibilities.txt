@@ -1,0 +1,5 @@
+grass:0
+leather:1
+cloth:1
+fur:2
+bamboo:3

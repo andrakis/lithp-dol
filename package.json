@@ -1,0 +1,14 @@
+{
+  "name": "dol",
+  "version": "0.0.1",
+  "description": "Dungeons of Lithp",
+  "main": "index.lithp",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lithp": "git+https://github.com/andrakis/node-lithp.git"
+  }
+}

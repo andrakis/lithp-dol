@@ -1,0 +1,2 @@
+leather:1
+wood:0

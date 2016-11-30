@@ -1,0 +1,5 @@
+shards:3
+spikes:4
+engravings:2
+pictures:2
+words:1
