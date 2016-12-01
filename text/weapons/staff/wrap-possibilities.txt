@@ -1,0 +1,4 @@
+cloth:1
+bamboo:2
+silk:4
+elven silk:6

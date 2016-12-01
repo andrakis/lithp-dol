@@ -1,0 +1,4 @@
+(
+	(def ins #Obj :: ((inspect Obj (dict (tuple "depth" (null))))))
+	(export-global ins/1)
+)

@@ -1,0 +1,5 @@
+ash:1
+alder:2
+iron:3
+ebony:5
+ironglass:6

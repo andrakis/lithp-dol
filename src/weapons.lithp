@@ -3,6 +3,7 @@
 	(import "file")
 	(import "lists")
 	(import "modules/random")
+	(import "modules/util")
 
 	(def file-filter #List :: ((filter List #Name :: ((!= "" Name)))))
 	(def file-get #Path :: ((map (file-filter (split (to-string (read-file Path)) "\n"))
@@ -38,11 +39,17 @@
 		(parse (file-get (+ "text/weapons/adorn-" Section ".txt")))
 	))
 
+	%(var Weapons  (file-get "text/weapons/weapons.txt"))
 	(var Weapons  (list "sword"))
-	(var WpnParts (read-parts "sword"))
+	(var WpnParts (dict))
 	(var WpnPartPossibilites (dict))
-	(each WpnParts (scope #Part :: (
-		(dict-set WpnPartPossibilites Part (read-possibilities "sword" Part))
+	(each Weapons (scope #Wpn :: (
+		(var Parts (dict))
+		(dict-set WpnParts Wpn (read-parts Wpn))
+		(each (dict-get WpnParts Wpn) (scope #Part :: (
+			(dict-set Parts Part (read-possibilities Wpn Part))
+		)))
+		(dict-set WpnPartPossibilites Wpn Parts)
 	)))
 	(var WpnNamePossibilities (dict
 		(tuple "prefixes" (read-names "prefixes"))
@@ -65,25 +72,27 @@
 	))
 	(def rand-name #Section :: ((random-list-item (index WpnNamePossibilities Section))))
 
-	(def rand-part #PartSection :: (
-		(var Possibilities (dict-get WpnPartPossibilites PartSection))
-		(if (== (undefined) Possibilities) (
-			(throw "Invalid possibilities list")
-		))
-		(random-list-item Possibilities)
+	(def rand-part #PartPossibilities,PartSection :: (
+		(random-list-item (index PartPossibilities PartSection))
 	))
 	
-	(def random-weapon # :: ((random-weapon 0)))
-	(def random-weapon #BasePower :: ((random-weapon BasePower 0)))
-	(def random-weapon #BasePower,ExtraPower :: (
+	(def random-weapon (scope # :: ((random-weapon 0))))
+	(def random-weapon (scope #BasePower :: ((random-weapon BasePower 0))))
+	(def random-weapon (scope #BasePower,ExtraPower :: (
 		(def dg (scope #Name :: ((dict-get Wpn Name))))
 		(def gn (scope #Name :: ((dict-get (dg Name) "name"))))
 		(def gp (scope #Name :: ((dict-get (dg Name) "power"))))
 		(var Wpn (dict (tuple "power" 0)))
 		(var TotalPower (+ BasePower ExtraPower))
 		(while ((< (dict-get Wpn power) TotalPower)) (
+			(var WpnType (random-list-item Weapons))
+			(var WpnPartsForType (index WpnParts WpnType))
+			(var WpnPartsPossibilities (index WpnPartPossibilites WpnType))
+			(dict-set Wpn "type" WpnType)
 			% For each WpnPart, get a random part.
-			(each WpnParts (scope #Part :: ((dict-set Wpn Part (rand-part Part)))))
+			(each WpnPartsForType (scope #Part :: (
+				(dict-set Wpn Part (rand-part WpnPartsPossibilities Part))
+			)))
 			% Generate adornments 30% of the time
 			(if (> 6 (random 0 10)) (
 				(dict-set Wpn adorns (rand-adorns))
@@ -92,12 +101,12 @@
 			)))
 			% Calculate the power
 			(var Power 0)
-			(each WpnParts (scope #Part :: (
+			(each WpnPartsForType (scope #Part :: (
 				(set Power (+ Power (gp Part)))
 			)))
 			(each (get-adorns Wpn) (scope #Adorn :: (
 				(set Power (+ Power (dict-get (dict-get Adorn "prefix") "power")
-									(dict-get (dict-get Adorn "suffix") "power")))
+				                    (dict-get (dict-get Adorn "suffix") "power")))
 			)))
 			(var Inscription "")
 			(if (!= "none" (gn "inscription")) (
@@ -110,8 +119,8 @@
 		% Generate a random name
 		(dict-set Wpn name (rand-name))
 		(get Wpn)
-	))
-	(export random-weapon/0 random-weapon/1)
+	)))
+	(export random-weapon/0 random-weapon/1 random-weapon/2)
 
 	(def get-adorns #Weapon :: ((index Weapon "adorns")))
 	(def get-adorn-string #Weapon :: (
@@ -132,18 +141,18 @@
 		)
 	))
 
-	(def describe-weapon #Weapon :: (
+	(def describe-weapon (scope #Weapon :: (
 		(def dg (scope #Name :: ((dict-get Weapon Name))))
 		(def gn (scope #Name :: ((dict-get (dg Name) "name"))))
 		(def gp (scope #Name :: ((dict-get (dg Name) "power"))))
-		(+ "A sword named " (dg name) ", contained in a " (gn scabbard) " scabbard. "
+		(+ "A " (dg type) " named " (dg name) ", contained in a " (gn scabbard) " scabbard. "
 		   "It has a " (gn hilt) " hilt, a " (gn pommel) " pommel and " (gn handwrap) " handwrap. "
 		   "The handguard is made of " (gn handguard) ", and the blade of " (gn blade) ". "
 		   (dg "inscription")
 		   (get-adorn-string Weapon)
 		   " This sword has a power of " (dg "power") "."
 		)
-	))
+	)))
 
 	(export describe-weapon/1)
 
@@ -151,7 +160,7 @@
 		(var BasePower (random 0 5))
 		(set LastPower (get BasePower))
 		(if true (
-			(map (seq 1 10) (scope #Power :: (
+			(map (seq 10 20) (scope #Power :: (
 				(var Weapon (random-weapon (+ BasePower Power)))
 				(print (describe-weapon Weapon) "\n")
 			)))

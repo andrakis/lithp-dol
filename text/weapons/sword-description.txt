@@ -1,0 +1,7 @@
+((+ "A " (dg type) " named " (dg name) ", contained in a " (gn scabbard) " scabbard. "
+   "It has a " (gn hilt) " hilt, a " (gn pommel) " pommel and " (gn handwrap) " handwrap. "
+   "The handguard is made of " (gn handguard) ", and the blade of " (gn blade) ". "
+   (dg "inscription")
+   (get-adorn-string Weapon)
+   " This sword has a power of " (dg "power") "."
+))
