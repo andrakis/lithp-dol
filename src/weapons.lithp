@@ -84,7 +84,8 @@
 		(def gp (scope #Name :: ((dict-get (dg Name) "power"))))
 		(var Wpn (dict (tuple "power" 0)))
 		(var TotalPower (+ BasePower ExtraPower))
-		(while ((< (dict-get Wpn power) TotalPower)) (
+		(var Power 0)
+		(while ((< Power TotalPower)) (
 			(var WpnType (random-list-item Weapons))
 			(var WpnPartsForType (index WpnParts WpnType))
 			(var WpnPartsPossibilities (index WpnPartPossibilites WpnType))
@@ -100,7 +101,7 @@
 				(dict-set Wpn adorns "")
 			)))
 			% Calculate the power
-			(var Power 0)
+			(set Power 0)
 			(each WpnPartsForType (scope #Part :: (
 				(set Power (+ Power (gp Part)))
 			)))
@@ -140,6 +141,7 @@
 		   (dict-get (dict-get Adorns "suffix") "power")
 		)
 	))
+	(export get-adorns/1 get-adorn-string/1)
 
 	(def describe-weapon (scope #Weapon :: (
 		(def dg (scope #Name :: ((dict-get Weapon Name))))
@@ -156,11 +158,23 @@
 
 	(export describe-weapon/1)
 
+	(var WeaponSwordDesc (read-file "text/weapons/sword-description.txt"))
+	(set WeaponSwordDesc (to-string WeaponSwordDesc))
+	(def weapon-get-desc (scope #Weapon :: (
+		(def dg (scope #Name :: ((dict-get Weapon Name))))
+		(def gn (scope #Name :: ((dict-get (dg Name) "name"))))
+		(def gp (scope #Name :: ((dict-get (dg Name) "power"))))
+		(def get-adorn-string # :: ((get-adorn-string Weapon)))
+		(scope (eval WeaponSwordDesc))
+	)))
+	(export weapon-get-desc/1)
+
+
 	(if (get-def 'DOLTEST') (
 		(var BasePower (random 0 5))
 		(set LastPower (get BasePower))
 		(if true (
-			(map (seq 10 20) (scope #Power :: (
+			(map (seq 15 25) (scope #Power :: (
 				(var Weapon (random-weapon (+ BasePower Power)))
 				(print (describe-weapon Weapon) "\n")
 			)))

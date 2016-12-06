@@ -1,0 +1,9 @@
+(
+	(import "file")
+	(import "src/weapons")
+
+	(var Describe1 (weapon-get-desc (random-weapon 10)))
+	(var Describe2 (weapon-get-desc (random-weapon 30)))
+	(print (call Describe1))
+	(print (call Describe2))
+)

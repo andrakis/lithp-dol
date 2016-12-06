@@ -9,4 +9,5 @@ bur
 wer
 wur
 tar
-
+kor
+goth
