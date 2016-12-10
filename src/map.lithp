@@ -1,0 +1,89 @@
+% DOL - Map module
+%
+% Manages a map and proxy rendering.
+%
+(
+	(import lists)
+	(import switch)
+
+	% Shorthand directions
+	(def direction #Shorthand :: (
+		(switch Shorthand (list
+			(case "n" # :: ((atom north)))
+			(case "s" # :: ((atom south)))
+			(case "e" # :: ((atom east)))
+			(case "w" # :: ((atom west)))
+			(case "u" # :: ((atom up)))
+			(case "d" # :: ((atom down)))
+		))
+	))
+	
+	(def opposite #Direction :: (
+		(switch Direction (list
+			(case north # :: ((atom south)))
+			(case south # :: ((atom north)))
+			(case east  # :: ((atom west)))
+			(case west  # :: ((atom east)))
+			(case up    # :: ((atom down)))
+			(case down  # :: ((atom up)))
+		))
+	))
+
+	(def position #Pos,X,Y :: (
+		(switch Pos (list
+			(case north     # :: ((list X (- Y 1))))
+			(case south     # :: ((list X (+ Y 1))))
+			(case east      # :: ((list (+ X 1) Y)))
+			(case west      # :: ((list (- X 1) Y)))
+			(case northeast # :: ((list (+ X 1) (- Y 1))))
+			(case southeast # :: ((list (+ X 1) (+ Y 1))))
+			(case southwest # :: ((list (- X 1) (+ Y 1))))
+			(case northwest # :: ((list (- X 1) (- Y 1))))
+		))
+	))
+
+	(var Directions (list north south east west northeast southeast southwest northwest))
+	(var AllDirection (list noth south east west northeast southeast southwest northwest up down))
+
+	(var Rooms (dict))
+	(var RoomIdCounter 0)
+	(def room-id (scope # :: (
+		(var Value (get RoomIdCounter))
+		(set RoomIdCounter (+ 1 (get RoomIdCounter)))
+		(get Value)
+	)))
+
+	(def room #Id,Title :: ((room Id Title "")))
+	(def room #Id,Title,Description :: ((room Id Title Description (dict))))
+	(def room #Id,Title,Description,Exits :: ((room Id Title Description Exits " ")))
+	(def room (scope #Id,Title,Description,Exits,Tile :: (
+		(var Room (dict
+			(tuple id Id)
+			(tuple title Title)
+			(tuple description Description)
+			(tuple exits Exits)
+			(tuple tile Tile)
+			(tuple art (dict))
+			(tuple contents (list))
+		))
+		(dict-set Rooms Id Room)
+		(get Room)
+	)))
+
+	(def room-join #Self,Direction,Room :: (
+		(dict-set (dict-get Self exits) Direction (room-id Room))
+		(dict-set (dict-get Room exits) (opposite Direction) (room-id Self))
+	))
+
+	(def get-room (scope #Id :: ((dict-get Rooms Id))))
+
+	(def room-id #Room :: ((dict-get Room id)))
+
+	(var Initial (room (room-id) "Initial"))
+	(room-join Initial north (room (room-id) "North"))
+	(room-join Initial east  (room (room-id) "East"))
+	(room-join Initial south (room (room-id) "South"))
+	(room-join Initial west  (room (room-id) "West"))
+
+	(print Initial)
+)
