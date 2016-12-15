@@ -74,6 +74,37 @@
 		(dict-set (dict-get Self exits) Direction (room-id Room))
 		(dict-set (dict-get Room exits) (opposite Direction) (room-id Self))
 	))
+	(def room-border #Self,Direction :: (
+		(if (room-is-exit Self Direction) (
+			(room-exit Self Direction)
+		) (else (
+			(room-tile Self Direction)
+		)))
+	))
+	(def room-is-exit #Self,Direction :: (
+		(dict-present (room-exits Self) Direction)
+	))
+	(def room-exits #Self :: ((dict-get Self exits)))
+	(def room-exit  #Self,Direction :: ((dict-get (room-exits Self) Direction)))
+	(def room-arts  #Self :: ((dict-get Self art)))
+	(def room-art   #Self,Direction :: (
+		(var Arts (room-arts Self))
+		(if (dict-present Arts Direction) (
+			(dict-get Arts Direction)
+		) (else (
+			(".")
+		)))
+	))
+	(def room-tile  #Self,Direction :: (
+		(if (dict-present (room-exits Self) Direction) (
+			(tile-art (room-exit Self Direction))
+		) (else (
+			(room-art Self Direction)
+		)))
+	))
+	(def tile-art #Self,Direction :: (
+		(dict-get Self art)
+	))
 
 	(def get-room (scope #Id :: ((dict-get Rooms Id))))
 

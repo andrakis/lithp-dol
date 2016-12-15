@@ -63,17 +63,17 @@
 
 	(def rand-adorns # :: (
 		(dict
-			(tuple "prefix" (random-list-item (dict-get WpnAdornPossibilities "prefixes")))
-			(tuple "suffix" (random-list-item (dict-get WpnAdornPossibilities "suffixes"))))
+			(tuple "prefix" (list-rand (dict-get WpnAdornPossibilities "prefixes")))
+			(tuple "suffix" (list-rand (dict-get WpnAdornPossibilities "suffixes"))))
 	))
 
 	(def rand-name # :: (
 		(+ "" (rand-name "prefixes") (rand-name "main") (rand-name "suffixes"))
 	))
-	(def rand-name #Section :: ((random-list-item (index WpnNamePossibilities Section))))
+	(def rand-name #Section :: ((list-rand (index WpnNamePossibilities Section))))
 
 	(def rand-part #PartPossibilities,PartSection :: (
-		(random-list-item (index PartPossibilities PartSection))
+		(list-rand (index PartPossibilities PartSection))
 	))
 	
 	(def random-weapon (scope # :: ((random-weapon 0))))
@@ -86,7 +86,7 @@
 		(var TotalPower (+ BasePower ExtraPower))
 		(var Power 0)
 		(while ((< Power TotalPower)) (
-			(var WpnType (random-list-item Weapons))
+			(var WpnType (list-rand Weapons))
 			(var WpnPartsForType (index WpnParts WpnType))
 			(var WpnPartsPossibilities (index WpnPartPossibilites WpnType))
 			(dict-set Wpn "type" WpnType)

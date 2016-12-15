@@ -1,0 +1,22 @@
+% vim: set syntax=lithp noet ts=4:
+%
+% Describes a staff.
+%
+% Returns an anonymous function that can be called to refresh the description.
+%
+% The following symbols are defined:
+%
+%   dg/1                Get a named top level member from the current weapon.
+%   gn/1                Get a named weapon part from the current weapon.
+%   get-adorn-string/0  Get the adornment string for the current weapon.
+%
+%
+(# :: (+
+   "A " (dg "type") " named " (dg "name") ", contained in a " (gn "scabbard") " scabbard. "
+   "It has a " (gn "hilt") " hilt, a " (gn "pommel") " pommel and " (gn "handwrap") " handwrap. "
+   "The handguard is made of " (gn "handguard") ", and the blade of " (gn "blade") ". "
+   (dg "inscription")
+   (get-adorn-string)
+   " This staff has a power of " (dg "power") "."
+))
+
