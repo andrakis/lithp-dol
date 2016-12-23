@@ -1,5 +1,6 @@
 % weapons.lithp - provide basic weapons
 (
+	%(import math)
 	(import "file")
 	(import "lists")
 	(import "modules/random")
@@ -27,16 +28,16 @@
 	))
 
 	(def read-parts #Weapon :: (
-		(file-get (+ "text/weapons/" Weapon "-parts.txt"))
+		(next file-get (+ "text/weapons/" Weapon "-parts.txt"))
 	))
 	(def read-possibilities #Weapon,Part :: (
-		(parse (file-get (+ "text/weapons/" Weapon "/" Part "-possibilities.txt")))
+		(next parse (file-get (+ "text/weapons/" Weapon "/" Part "-possibilities.txt")))
 	))
 	(def read-names #Section :: (
-		(file-get (+ "text/weapons/name-" Section ".txt"))
+		(next file-get (+ "text/weapons/name-" Section ".txt"))
 	))
 	(def read-adorns #Section :: (
-		(parse (file-get (+ "text/weapons/adorn-" Section ".txt")))
+		(next parse (file-get (+ "text/weapons/adorn-" Section ".txt")))
 	))
 
 	%(var Weapons  (file-get "text/weapons/weapons.txt"))
@@ -106,8 +107,10 @@
 				(set Power (+ Power (gp Part)))
 			)))
 			(each (get-adorns Wpn) (scope #Adorn :: (
-				(set Power (+ Power (dict-get (dict-get Adorn "prefix") "power")
-				                    (dict-get (dict-get Adorn "suffix") "power")))
+				(if (!= list (typeof Adorn)) (
+					(set Power (+ Power (dict-get (dict-get Adorn "prefix") "power")
+					                    (dict-get (dict-get Adorn "suffix") "power")))
+				))
 			)))
 			(var Inscription "")
 			(if (!= "none" (gn "inscription")) (

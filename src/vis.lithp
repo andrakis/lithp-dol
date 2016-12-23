@@ -1,0 +1,47 @@
+(
+	(import lists)
+	(import lists-ext)
+	(import record)
+
+	(def vis-record # :: (
+		(record vis (list locations root minx miny maxx maxy visual done) (dict
+			(tuple locations (list))
+			(tuple minx (- 1))
+			(tuple miny (- 1))
+			(tuple maxx 1)
+			(tuple maxy 1)
+			(tuple visual (list))
+			(tuple done (list))
+		))
+	))
+
+	(def vis-new #Location,Locations :: (
+		(record-set (vis-record) (dict
+			(tuple locations Locations)
+			(tuple root      Location)
+		))
+	))
+
+	(def visualise #Vis0 :: (
+		(var Result  (map-location (record-get Vis root) (tuple 0 0) Vis0))
+		(var Vis1    (index Result 0))
+		(var Actions (index Result 1))
+		(var Vis2    (map-loop Vis1 Actions))
+		(var XSeq    (seq (record-get Vis2 minx) (record-get Vis2 maxx)))
+		(var YSeq    (seq (record-get Vis2 miny) (record-get Vis2 maxy)))
+		(var Inner   (scope #X,Y :: (
+			(switch (lkeyfind (tuple X Y) (record-get Vis visual)) (list
+				(case false # :: ((".")))
+				(default #Tile :: (
+					(index Tile 1)
+				))
+			))
+		)))
+		(var Handler (scope #Y :: (
+			(++ (lcomp Inner (list XSeq)) (list "\n"))
+		)))
+		(lcomp Handler (list YSeq))
+	))
+
+	(print (vis-new x (list x y)))
+

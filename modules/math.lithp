@@ -1,0 +1,12 @@
+(
+	(platform ext)
+	(import lists)
+
+	(each (math-methods) #Method :: (
+		(var Name (+ (get Method) "/*"))
+		(def (atom Name) (scope #Params :: (
+			(js-apply (math-lib) (dict-get (math-lib) Method) Params)
+		)))
+		(export-global (atom Name))
+	))
+)

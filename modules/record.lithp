@@ -1,0 +1,32 @@
+(
+	(def record #Name,Members,Values :: (
+		(var Dict (tuple))
+		(map Members (scope #M :: (
+			(dict-set Dict M (dict-get Values M))
+		)))
+		(tuple Name Dict)
+	))
+
+	(def record-get #Record,Member :: (
+		(dict-get (index Record 1) Member)
+	))
+
+	(def record-set #Record,Member,Value :: (
+		(dict-set (index Record 1) Member Value)
+	))
+	(def record-set #Record,MembersValues :: (
+		(each (dict-keys MembersValues) (scope #Key :: (
+			(dict-set (index Record 1) Key (dict-get MembersValues Key))
+		)))
+		(Record)
+	))
+
+	(export-global record/3 record-get/2 record-set/2 record-set/3)
+
+	(if (get-def 'TEST') (
+		(var Record (record test (list foo bar) (dict (tuple foo 1) (tuple bar 2))))
+		(print (record-get Record foo))
+		(record-set Record foo 3)
+		(print (record-get Record foo))
+	))
+)

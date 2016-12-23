@@ -1,0 +1,32 @@
+(
+	(def lkeyfind #Key,List :: ((lkeyfind Key 0 List)))
+	(def lkeyfind #Key,Pos,List :: (
+		(if (== 0 (length List)) (
+			(atom false)
+		) (else (
+			(var Tuple (head List))
+			(if (lkeycompare Key (index Tuple Pos)) (
+				(Tuple)
+			) (else (
+				(recurse lkeyfind Key (tail List))
+			)))
+		)))
+	))
+
+	(def lkeycompare #Key,Value :: (
+		(if (== Key Value) ((atom true)) (else (
+			(== (inspect Key) (inspect Value))
+		)))
+	))
+
+	(export lkeyfind/2 lkeyfind/3)
+
+	(var L (list
+		(tuple a 1)
+		(tuple b 2)
+		(tuple (tuple 1 1) "test")
+	))
+	(print (lkeyfind a L))
+	(print (lkeyfind c L))
+	(print (lkeyfind (tuple 1 1) L))
+)
