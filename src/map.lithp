@@ -110,6 +110,14 @@
 
 	(def room-id #Room :: ((dict-get Room id)))
 
+	(def room-is-done #Self,Pos :: ((
+		(dict-present (dict-get Self done) Pos)
+	)))
+	(def room-map-room #Self,Room,Pos :: ((room-map-room Self Room Pos nil)))
+	(def room-map-room #Self,Room,Pos,Prev :: (
+		(atom nil)
+	))
+
 	(var Initial (room (room-id) "Initial"))
 	(room-join Initial north (room (room-id) "North"))
 	(room-join Initial east  (room (room-id) "East"))

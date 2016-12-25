@@ -21,12 +21,14 @@
 
 	(export lkeyfind/2 lkeyfind/3)
 
-	(var L (list
-		(tuple a 1)
-		(tuple b 2)
-		(tuple (tuple 1 1) "test")
+	(if (get-def 'TEST') (
+		(var L (list
+			(tuple a 1)
+			(tuple b 2)
+			(tuple (tuple 1 1) "test")
+		))
+		(print (lkeyfind a L))
+		(print (lkeyfind c L))
+		(print (lkeyfind (tuple 1 1) L))
 	))
-	(print (lkeyfind a L))
-	(print (lkeyfind c L))
-	(print (lkeyfind (tuple 1 1) L))
 )
