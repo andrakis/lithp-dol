@@ -1,0 +1,51 @@
+% Implements module behaviour.
+% Modules are similar to Erlang modules, in that they have a number of
+% attributes and functions that can be called. However, they run in a
+% contained memory space, instead of exporting functions to the global
+% namespace.
+(
+	(import lists)
+
+	(var Modules (dict))
+
+	(def module-new #Name,Callback :: (
+		(var InnerState (dict))
+		(var Members (call Callback Name InnerState))
+		(var Module (dict
+			(tuple module Name)
+			(tuple state InnerState)
+		))
+		(map (dict-keys Members) (scope #Member :: (
+			(dict-set Module (+ "fn_" Member) (scope #Self,Args :: (
+				(apply (dict-get Members Member) Args)
+			)))
+		)))
+		(dict-set Modules Name Module)
+		(Module)
+	))
+
+	(def module-extends #Name,Overrides :: (
+		(throw not_implemented)
+	))
+
+	(def module-call/* #Params :: (
+		(var ModName (head Params))
+		(set Params (tail Params))
+		(var FunName (+ "fn_" (head Params)))
+		(set Params (tail Params))
+		(var Module (dict-get Modules ModName))
+		(var Fun    (dict-get Module FunName))
+		(call Fun Module Params)
+	))
+
+	(export-global module-new/2 module-extends/2 module-call/*)
+
+	(if (get-def 'TEST') (
+		(var M (module-new test #State :: (
+			(dict
+				(tuple add #A,B :: ((+ A B)))
+			)
+		)))
+		(print (module-call test add 1 2))
+	))
+)
