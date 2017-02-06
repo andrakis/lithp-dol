@@ -5,14 +5,14 @@
 	(import switch)
 
 	(def vis-record # :: (
-		(record vis (list locations root minx miny maxx maxy visual done) (dict
-			(tuple locations (list))
+		(record vis [locations root minx miny maxx maxy visual done] (dict
+			(tuple locations [])
 			(tuple minx (- 1))
 			(tuple miny (- 1))
 			(tuple maxx 1)
 			(tuple maxy 1)
-			(tuple visual (list))
-			(tuple done (list))
+			(tuple visual [])
+			(tuple done [])
 		))
 	))
 
@@ -32,14 +32,14 @@
 		(var YSeq    (seq (record-get Vis2 miny) (record-get Vis2 maxy)))
 		(var Handler (scope #Y :: (
 			(var Handler2 (scope #X :: (
-				(switch (lkeyfind (tuple X Y) (record-get Vis2 visual)) (list
+				(switch (lkeyfind (tuple X Y) (record-get Vis2 visual)) [
 					(case false # :: ((".")))
 					(default #Tile :: ((index Tile 1)))
-				))
+				])
 			)))
-			(++ (lcomp Handler2 (list XSeq)) (list "\n"))
+			(++ (lcomp Handler2 [XSeq]) ["\n"])
 		)))
-		(lcomp Handler (list YSeq))
+		(lcomp Handler [YSeq])
 	))
 
 	(def map-loop #Vis0,Actions :: (
@@ -57,7 +57,7 @@
 	(def map-location #Location,Pos,Vis :: ((next map-location Location Pos Vis nil)))
 	(def map-location #Location,Pos,Vis,Prev :: (
 		(if (is-done Vis Pos) (
-			(tuple Vis (list))
+			(tuple Vis [])
 		) (else (
 			(next do-map-location Location Pos Vis Prev)
 		)))
@@ -72,15 +72,15 @@
 		(var Y (index Pos 1))
 		(var Prev1 (? (== nil Prev0) (location-id Location) Prev0))
 		(var Tile (loc-tile Location))
-		(var Visual1 (++ (list (tuple Pos Tile)) Vis0))
+		(var Visual1 (++ [(tuple Pos Tile)] Vis0))
 		(var Visual2 (maybe-map-borders Location Pos Vis0 Visual1))
-		(var Vis1 (record-set Vis0 done (++ (list (tuple Pos done)) (record-get Vis0 done))))
+		(var Vis1 (record-set Vis0 done (++ [(tuple Pos done)] (record-get Vis0 done))))
 		(var Vis1 (record-set Vis1 minx (? (< (- X 1) (record-get Vis1 minx)) (- X 1) (record-get Vis1 minx))))
 		(var Vis1 (record-set Vis1 miny (? (< (- Y 1) (record-get Vis1 miny)) (- Y 1) (record-get Vis1 miny))))
 		(var Vis1 (record-set Vis1 maxx (? (> (+ X 1) (record-get Vis1 maxx)) (+ X 1) (record-get Vis1 maxx))))
 		(var Vis1 (record-set Vis1 maxy (? (> (+ Y 1) (record-get Vis1 maxy)) (+ Y 1) (record-get Vis1 maxy))))
-		(var Actions (foldl (directions) (list) (scope #Directions,ActionsAcc :: (
-			(switch (loc-neighbour Direction Location) (list
+		(var Actions (foldl (directions) [] (scope #Directions,ActionsAcc :: (
+			(switch (loc-neighbour Direction Location) [
 				(case false # :: ((ActionsAcc)))
 				(default (scope #N :: (
 					(var Id (record-get Neighbour id))
@@ -88,12 +88,12 @@
 						(var Result (lkeyfind Id 1 (record-get Vis1 locations)))
 						(var Neighbour (index N 1))
 						(var Position (position oc-position Direction Pos))
-						(++ (list (tuple Neighbour Position Prev1)) ActionsAcc)
+						(++ [(tuple Neighbour Position Prev1)] ActionsAcc)
 					) (else (
 						(ActionsAcc)
 					)))
 				)))
-			))
+			])
 		))))
 		(tuple Vis1 Actions)
 	))
@@ -105,6 +105,6 @@
 		)))
 	))
 
-	(var V (vis-new x (list x y)))
+	(var V (vis-new x [x y]))
 	(print (join (flatten (visualise V)) ""))
 

@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lithp": "git+https://github.com/andrakis/node-lithp.git"
+    "lithp": "git://github.com/andrakis/node-lithp.git"
   }
 }

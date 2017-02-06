@@ -8,42 +8,42 @@
 
 	% Shorthand directions
 	(def direction #Shorthand :: (
-		(switch Shorthand (list
+		(switch Shorthand [
 			(case "n" # :: ((atom north)))
 			(case "s" # :: ((atom south)))
 			(case "e" # :: ((atom east)))
 			(case "w" # :: ((atom west)))
 			(case "u" # :: ((atom up)))
 			(case "d" # :: ((atom down)))
-		))
+		])
 	))
 	
 	(def opposite #Direction :: (
-		(switch Direction (list
+		(switch Direction [
 			(case north # :: ((atom south)))
 			(case south # :: ((atom north)))
 			(case east  # :: ((atom west)))
 			(case west  # :: ((atom east)))
 			(case up    # :: ((atom down)))
 			(case down  # :: ((atom up)))
-		))
+		])
 	))
 
 	(def position #Pos,X,Y :: (
-		(switch Pos (list
-			(case north     # :: ((list X (- Y 1))))
-			(case south     # :: ((list X (+ Y 1))))
-			(case east      # :: ((list (+ X 1) Y)))
-			(case west      # :: ((list (- X 1) Y)))
-			(case northeast # :: ((list (+ X 1) (- Y 1))))
-			(case southeast # :: ((list (+ X 1) (+ Y 1))))
-			(case southwest # :: ((list (- X 1) (+ Y 1))))
-			(case northwest # :: ((list (- X 1) (- Y 1))))
-		))
+		(switch Pos [
+			(case north     # :: ([X (- Y 1))])
+			(case south     # :: ([X (+ Y 1))])
+			(case east      # :: ([(+ X 1) Y)])
+			(case west      # :: ([(- X 1) Y)])
+			(case northeast # :: ([(+ X 1) (- Y 1))])
+			(case southeast # :: ([(+ X 1) (+ Y 1))])
+			(case southwest # :: ([(- X 1) (+ Y 1))])
+			(case northwest # :: ([(- X 1) (- Y 1))])
+		])
 	))
 
-	(var Directions (list north south east west northeast southeast southwest northwest))
-	(var AllDirection (list noth south east west northeast southeast southwest northwest up down))
+	(var Directions [north south east west northeast southeast southwest northwest])
+	(var AllDirection [north south east west northeast southeast southwest northwest up down])
 
 	(var Rooms (dict))
 	(var RoomIdCounter 0)
@@ -64,7 +64,7 @@
 			(tuple exits Exits)
 			(tuple tile Tile)
 			(tuple art (dict))
-			(tuple contents (list))
+			(tuple contents [])
 		))
 		(dict-set Rooms Id Room)
 		(get Room)
